@@ -4,7 +4,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 # dependencies
-COPY package*.json ./
+RUN npm init -y
 RUN npm install
 
 # source
