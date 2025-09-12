@@ -5,7 +5,7 @@ WORKDIR /app
 
 # dependencies
 RUN npm init -y
-RUN npm install
+RUN npm install express @supabase/supabase-js body-parser dotenv
 
 # source
 COPY . .
