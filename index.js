@@ -1,66 +1,61 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import { supabase } from './supabase.js';
-import dotenv from 'dotenv';
+import express from "express";
+import bodyParser from "body-parser";
+import { db } from "./db.js";
+import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
-
 const PORT = process.env.PORT || 3000;
 
-// Anime bilgisi al
-app.get('/api/getanime/:id', async (req, res) => {
-  const { id } = req.params;
-  const { data, error } = await supabase
-    .from('animes')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (error) return res.status(400).json({ error: error.message });
-  res.json(data);
+// Anime al
+app.get("/api/getanime/:id", async (req, res) => {
+  try {
+    const anime = await db.collection("animes").findOne({ _id: new ObjectId(req.params.id) });
+    if (!anime) return res.status(404).json({ error: "Anime bulunamadı" });
+    res.json(anime);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // Bölüm linki al
-app.get('/api/getstream/:id/:episode', async (req, res) => {
-  const { id, episode } = req.params;
-  const { data, error } = await supabase
-    .from('streams')
-    .select('*')
-    .eq('anime_id', id)
-    .eq('episode', episode)
-    .single();
-
-  if (error) return res.status(400).json({ error: error.message });
-  res.json(data);
+app.get("/api/getstream/:id/:episode", async (req, res) => {
+  try {
+    const stream = await db.collection("streams").findOne({
+      anime_id: new ObjectId(req.params.id),
+      episode: parseInt(req.params.episode)
+    });
+    if (!stream) return res.status(404).json({ error: "Stream bulunamadı" });
+    res.json(stream);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // Yeni anime ekle
-app.post('/api/addanime', async (req, res) => {
-  const { title, description, image } = req.body;
-  const { data, error } = await supabase
-    .from('animes')
-    .insert([{ title, description, image }])
-    .select()
-    .single();
-
-  if (error) return res.status(400).json({ error: error.message });
-  res.json(data);
+app.post("/api/addanime", async (req, res) => {
+  try {
+    const { title, description, image } = req.body;
+    const result = await db.collection("animes").insertOne({ title, description, image, created_at: new Date() });
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // Anime düzenle
-app.put('/api/editanime', async (req, res) => {
-  const { id, title, description, image } = req.body;
-  const { data, error } = await supabase
-    .from('animes')
-    .update({ title, description, image })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) return res.status(400).json({ error: error.message });
-  res.json(data);
+app.put("/api/editanime", async (req, res) => {
+  try {
+    const { id, title, description, image } = req.body;
+    const result = await db.collection("animes").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { title, description, image } }
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
