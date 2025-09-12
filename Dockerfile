@@ -3,15 +3,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# dependencies
-RUN npm init -y
-RUN npm install express @supabase/supabase-js body-parser dotenv
+# 1️⃣ package.json ve package-lock.json kopyala (bu adım cache için önemli)
+COPY package*.json ./
 
-# source
+# 2️⃣ bağımlılıkları yükle
+RUN npm install
+
+# 3️⃣ uygulama kodlarını kopyala
 COPY . .
 
-# env dosyasını container içinde otomatik al
 ENV NODE_ENV=production
-
 EXPOSE 3000
 CMD ["node", "index.js"]
