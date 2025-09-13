@@ -108,10 +108,10 @@ app.put("/api/editstream/:id", async (req, res) => {
 
 app.get("/api/getstream/:id/:episode", async (req, res) => {
   try {
-    const stream = await db.collection("streams").findOne({
+    const stream = await db.collection("streams").find({
       mal_id: parseInt(req.params.id),
       episode: parseInt(req.params.episode)
-    });
+    }).toArray();
     if (!stream) return res.status(404).json({ error: "Stream bulunamadı" });
     res.json(stream);
   } catch (err) {
