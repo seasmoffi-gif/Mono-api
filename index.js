@@ -37,8 +37,8 @@ app.get("/api/getstream/:id/:episode", async (req, res) => {
 // Yeni anime ekle
 app.post("/api/addanime", async (req, res) => {
   try {
-    const { title, description, year, image, mal_id, genres } = req.body;
-    const result = await db.collection("animes").insertOne({ title, description, year, image, mal_id, genres, created_at: new Date() });
+    const { title, description, year, image, mal_id, genres, total} = req.body;
+    const result = await db.collection("animes").insertOne({ title, description, year, image, mal_id, genres, total, created_at: new Date() });
     res.json(result);
   } catch (err) {
     res.status(400).json({ error: err.message });
