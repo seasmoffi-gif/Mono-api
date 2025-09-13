@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 // Anime al
 app.get("/api/getanime/:id", async (req, res) => {
   try {
-    const anime = await db.collection("animes").findOne({ _id: new ObjectId(req.params.id) });
+    const anime = await db.collection("animes").findOne({ animeId: parseInt(id) });
     if (!anime) return res.status(404).json({ error: "Anime bulunamadı" });
     res.json(anime);
   } catch (err) {
