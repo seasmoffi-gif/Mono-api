@@ -2,10 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import { db, ObjectId } from "./db.js";
 import dotenv from "dotenv";
-dotenv.config();
+import cors from "cors";
 
+
+dotenv.config();
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 // Anime al
