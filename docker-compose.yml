@@ -10,31 +10,29 @@ services:
     restart: unless-stopped
 
   mongo:
-    image: mongo:6
+    image: mongo:7
     container_name: mongo
-    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - mongo_data:/data/db
     ports:
       - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
 
   mongo-express:
-    image: mongo-express:latest
+    image: mongo-express:1.0.0
     container_name: mongo-express
-    restart: unless-stopped
     depends_on:
       - mongo
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin
+      ME_CONFIG_MONGODB_SERVER: mongo
     expose:
       - 8081
+    restart: unless-stopped
 
 volumes:
-  mongo_data:
+  mongo-data:
