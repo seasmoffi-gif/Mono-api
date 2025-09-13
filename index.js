@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { db } from "./db.js";
+import { db, ObjectId } from "./db.js";
 import dotenv from "dotenv";
 dotenv.config();
 
