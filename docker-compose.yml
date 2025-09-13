@@ -8,6 +8,8 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    networks:
+      - anime-net
 
   mongo:
     image: mongo:7
@@ -20,6 +22,8 @@ services:
     volumes:
       - mongo-data:/data/db
     restart: unless-stopped
+    networks:
+      - anime-net
 
   mongo-express:
     image: mongo-express:1.0.0
@@ -29,11 +33,17 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_SERVER: mongo   # 👈 Burada kesin mongo olmalı
-      ME_CONFIG_MONGODB_PORT: 27017     # 👈 Port da ekleyelim garanti olsun
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
     ports:
       - "8081:8081"
     restart: unless-stopped
+    networks:
+      - anime-net
 
 volumes:
   mongo-data:
+
+networks:
+  anime-net:
+    driver: bridge
