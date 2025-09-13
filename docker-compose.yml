@@ -37,5 +37,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  mongodb_data:
+  mongo_data:
     driver: local
